@@ -6,7 +6,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Typography
 
 val Typography = Typography(
-    // LargeTitle / Bold
     displayLarge = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 34.sp,
