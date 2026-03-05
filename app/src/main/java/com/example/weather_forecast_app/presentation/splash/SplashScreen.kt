@@ -95,7 +95,7 @@ private fun BackgroundAnimation(composition: LottieComposition?) {
         modifier = Modifier
             .fillMaxSize()
             .alpha(0.5f),
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.FillHeight
     )
 }
 
