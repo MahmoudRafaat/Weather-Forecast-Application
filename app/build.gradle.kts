@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -10,6 +12,12 @@ android {
     namespace = "com.example.weather_forecast_app"
     compileSdk = 36
 
+    val properties = Properties()
+    val propertiesFile = project.rootProject.file("local.properties")
+    if (propertiesFile.exists()) {
+        properties.load(propertiesFile.inputStream())
+    }
+
     defaultConfig {
         applicationId = "com.example.weather_forecast_app"
         minSdk = 26
@@ -18,6 +26,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_KEY", "\"${properties.getProperty("MAP_API_KEY") ?: ""}\"")
+        buildConfigField("String", "BASE_URL", properties.getProperty("BASE_URL") ?: "\"\"")
+        buildConfigField("String", "DATA_STORE_NAME", properties.getProperty("DATA_STORE_NAME") ?: "\"\"")
     }
 
     buildTypes {
@@ -40,6 +52,13 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
     }
 }
 
@@ -50,18 +69,17 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.core.ktx)
     implementation(libs.androidx.compose.foundation.layout)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.work.runtime.ktx)
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    // Updated BOM to resolve @UiComposable warning
     implementation(platform("androidx.compose:compose-bom:2024.12.01"))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.splashscreen)
@@ -73,6 +91,31 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.compose.runtime:runtime-livedata:1.7.5")
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
 
     val room_version = "2.6.1"
     implementation("androidx.room:room-ktx:$room_version")
@@ -80,8 +123,37 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation("com.airbnb.android:lottie-compose:6.4.0")
 
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.2")
+
+    // Osmdroid for Map
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
+
+    // Material Icons Extended
+    implementation("androidx.compose.material:material-icons-extended")
+
+    // Local Unit Tests
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.test.core.ktx)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.ext.junit.ktx)
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.truth)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+
+    // Instrumented Tests
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.arch.core.testing)
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.12.01"))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
