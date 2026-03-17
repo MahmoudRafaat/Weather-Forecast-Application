@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name"> طقس اليوم</string>
+    <string name="app_name"> رَصد</string>
     <string name="weather">طقس</string>
-    <string name="forecasts"> اليوم</string>
+    <string name="forecasts">اليوم </string>
     <string name="humidity">الرطوبة</string>
     <string name="wind_speed">سرعة الرياح</string>
     <string name="pressure">الضغط</string>

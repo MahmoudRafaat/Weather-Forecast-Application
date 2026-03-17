@@ -23,9 +23,12 @@ fun HomeContent(
     currentSystem: String = "metric"
 ) {
     val todayDateStr = WeatherUtils.formatUnixTimestamp(currentWeather.dt, "yyyy-MM-dd")
-    val filteredDaily = dailyForecast.filter { 
+    
+    val filteredDaily = dailyForecast.filter {
         WeatherUtils.formatUnixTimestamp(it.dt, "yyyy-MM-dd") != todayDateStr 
     }
+    
+    val next24Hours = hourlyForecast.take(8)
     
     val tempUnit = when(currentSystem) {
         "metric" -> stringResource(R.string.unit_celsius)
@@ -47,7 +50,7 @@ fun HomeContent(
         Spacer(modifier = Modifier.height(40.dp))
         ForecastSection(
             title = stringResource(R.string.today),
-            items = hourlyForecast,
+            items = next24Hours, // استخدام الـ 24 ساعة فقط هنا
             dateFormat = stringResource(R.string.time_format_am_pm),
             tempUnit = tempUnit
         )
