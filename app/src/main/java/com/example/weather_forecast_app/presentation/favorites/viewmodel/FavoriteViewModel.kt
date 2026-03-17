@@ -37,7 +37,7 @@ class FavoriteViewModel(
         successState
     }.catch {
         emit(FavoriteUiState.Error(UiText.StringResource(R.string.unknown_error))) 
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FavoriteUiState.Loading)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, FavoriteUiState.Loading)
 
     private val _showDeleteConfirmation = MutableSharedFlow<FavoriteLocation>()
     val showDeleteConfirmation = _showDeleteConfirmation.asSharedFlow()

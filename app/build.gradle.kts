@@ -91,6 +91,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.compose.runtime:runtime-livedata:1.7.5")
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+    implementation(libs.androidx.compose.remote.creation.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.junit)
     testImplementation(libs.junit.junit)
