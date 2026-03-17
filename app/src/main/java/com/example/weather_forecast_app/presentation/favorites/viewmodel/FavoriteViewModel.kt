@@ -73,7 +73,7 @@ class FavoriteViewModel(
             try {
                 repository.deleteFavorite(location)
             } catch (e: Exception) {
-                // Background operation
+
             }
         }
     }

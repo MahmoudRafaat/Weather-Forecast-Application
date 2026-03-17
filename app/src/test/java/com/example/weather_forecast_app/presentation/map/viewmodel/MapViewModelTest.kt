@@ -90,11 +90,13 @@ class MapViewModelTest {
 
         viewModel.onPointSelected(application, testPoint)
         val results = mutableListOf<Unit>()
-        val job = launch(UnconfinedTestDispatcher()) {
+        val job = launch {
             viewModel.navigateBack.toList(results)
         }
+        advanceUntilIdle()
         //when confirm location
         viewModel.confirmLocation(isFavoriteMode = true)
+        advanceUntilIdle()
         //then insertFavorite is called
         coVerify { repository.insertFavorite(any()) }
 
@@ -113,11 +115,13 @@ class MapViewModelTest {
 
         viewModel.onPointSelected(application, testPoint)
         val results = mutableListOf<Unit>()
-        val job = launch(UnconfinedTestDispatcher()) {
+        val job = launch {
             viewModel.navigateBack.toList(results)
         }
+        advanceUntilIdle()
         // When confirm location
         viewModel.confirmLocation(isFavoriteMode = false)
+        advanceUntilIdle()
 
         // Then manual location and mode are updated
         coVerify {
@@ -134,11 +138,14 @@ class MapViewModelTest {
     @Test
     fun onBackClicked_triggers_emitsToNavigateBackSharedFlow() = runTest {
         val results = mutableListOf<Unit>()
-        val job = launch(UnconfinedTestDispatcher()) {
+        val job = launch{
             viewModel.navigateBack.toList(results)
         }
+        advanceUntilIdle()
         // When back button is clicked
         viewModel.onBackClicked()
+
+        advanceUntilIdle()
         // then navigateBack is triggered
         assertThat(results.size, `is`(1))
         job.cancel()
