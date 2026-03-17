@@ -58,7 +58,6 @@ fun HomeScreen(navController: NavController) {
     var showGPSDialog by remember { mutableStateOf(false) }
     var showPermissionDeniedDialog by remember { mutableStateOf(false) }
     var permissionDenied by remember { mutableStateOf(false) }
-    val snackbarHostState = remember { SnackbarHostState() }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -202,109 +201,104 @@ fun HomeScreen(navController: NavController) {
         )
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = Color.Transparent
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(WeatherTheme.colors.backgroundGradient)
-                .padding(paddingValues)
-                .pullRefresh(pullRefreshState)
-        ) {
-            if (noInternet) {
-                NoInternetView (onRetry = { viewModel.fetchWeather() })
-            } else {
-                when (val state = uiState) {
-                    is HomeUiState.Loading -> {
-                        if (permissionDenied && locationMode == "gps") {
-                            PermissionDeniedView(
-                                onRetry = {
-                                    permissionLauncher.launch(
-                                        arrayOf(
-                                            Manifest.permission.ACCESS_FINE_LOCATION,
-                                            Manifest.permission.ACCESS_COARSE_LOCATION
-                                        )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(WeatherTheme.colors.backgroundGradient)
+            .pullRefresh(pullRefreshState)
+    ) {
+        if (noInternet) {
+            NoInternetView (onRetry = { viewModel.fetchWeather() })
+        } else {
+            when (val state = uiState) {
+                is HomeUiState.Loading -> {
+                    if (permissionDenied && locationMode == "gps") {
+                        PermissionDeniedView(
+                            onRetry = {
+                                permissionLauncher.launch(
+                                    arrayOf(
+                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION
                                     )
-                                },
-                                onGoToSettings = {
-                                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                        data = Uri.fromParts("package", context.packageName, null)
-                                    }
-                                    context.startActivity(intent)
+                                )
+                            },
+                            onGoToSettings = {
+                                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.fromParts("package", context.packageName, null)
                                 }
-                            )
-                        } else {
-                            CircularProgressIndicator(
-                                modifier = Modifier.align(Alignment.Center),
-                                color = SolidMagenta
-                            )
-                        }
-                    }
-                    is HomeUiState.Success -> {
-                        Column {
-                            AnimatedVisibility(visible = !state.isOnline) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f))
-                                        .padding(vertical = 4.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            Icons.Default.CloudOff,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.onErrorContainer,
-                                            modifier = Modifier.size(16.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text(
-                                            text = stringResource(R.string.offline_mode),
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onErrorContainer
-                                        )
-                                    }
-                                }
+                                context.startActivity(intent)
                             }
-                            HomeContent(
-                                currentWeather = state.currentWeather,
-                                hourlyForecast = state.hourlyForecast,
-                                dailyForecast = state.dailyForecast,
-                                lastUpdate = state.lastUpdate,
-                                windSpeedUnit = state.windSpeedUnit,
-                                currentSystem = state.units
-                            )
-                        }
-                    }
-                    is HomeUiState.Error -> {
-                        Column(
+                        )
+                    } else {
+                        CircularProgressIndicator(
                             modifier = Modifier.align(Alignment.Center),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = stringResource(R.string.error, state.message),
-                                color = MaterialTheme.colorScheme.error,
-                                modifier = Modifier.padding(16.dp),
-                                style = MaterialTheme.typography.bodyLarge)
-                            Button(
-                                onClick = { viewModel.fetchWeather() },
-                                colors = ButtonDefaults.buttonColors(containerColor = SolidMagenta)
+                            color = SolidMagenta
+                        )
+                    }
+                }
+                is HomeUiState.Success -> {
+                    Column {
+                        Spacer(modifier = Modifier.statusBarsPadding())
+                        AnimatedVisibility(visible = !state.isOnline) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f))
+                                    .padding(vertical = 4.dp),
+                                contentAlignment = Alignment.Center
                             ) {
-                                Text(stringResource(R.string.retry))
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        Icons.Default.CloudOff,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onErrorContainer,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = stringResource(R.string.offline_mode),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onErrorContainer
+                                    )
+                                }
                             }
+                        }
+                        HomeContent(
+                            currentWeather = state.currentWeather,
+                            hourlyForecast = state.hourlyForecast,
+                            dailyForecast = state.dailyForecast,
+                            lastUpdate = state.lastUpdate,
+                            windSpeedUnit = state.windSpeedUnit,
+                            currentSystem = state.units
+                        )
+                    }
+                }
+                is HomeUiState.Error -> {
+                    Column(
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(R.string.error, state.message),
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(16.dp),
+                            style = MaterialTheme.typography.bodyLarge)
+                        Button(
+                            onClick = { viewModel.fetchWeather() },
+                            colors = ButtonDefaults.buttonColors(containerColor = SolidMagenta)
+                        ) {
+                            Text(stringResource(R.string.retry))
                         }
                     }
                 }
             }
-            PullRefreshIndicator(
-                refreshing = false, // Arrow shows while pulling, but indicator spinner is hidden after release
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter),
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                contentColor = SolidMagenta
-            )
         }
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter).statusBarsPadding(),
+            backgroundColor = MaterialTheme.colorScheme.surface,
+            contentColor = SolidMagenta
+        )
     }
 }

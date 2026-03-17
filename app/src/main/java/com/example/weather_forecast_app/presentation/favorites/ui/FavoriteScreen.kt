@@ -108,107 +108,91 @@ fun FavoriteScreen(
         )
     }
 
-    Scaffold(
-        topBar = {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.surface,
-                shadowElevation = 4.dp
-            ) {
-                Box(
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .height(64.dp)
-                        .padding(horizontal = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        stringResource(R.string.favorites),
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { viewModel.onAddFavoriteClicked() },
-                containerColor = if (isOnline) SolidMagenta else MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = Color.White,
-                shape = CircleShape,
-                modifier = Modifier.padding(bottom = 16.dp, end = 8.dp)
-            ) {
-                Icon(Icons.Default.AddLocation, contentDescription = stringResource(R.string.add_favorite))
-            }
-        },
-        containerColor = Color.Transparent
-    ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(WeatherTheme.colors.backgroundGradient)
-                .padding(padding)
-        ) {
-            Column {
-                AnimatedVisibility(visible = !isOnline) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Default.CloudOff, contentDescription = null, tint = MaterialTheme.colorScheme.onErrorContainer)
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Text(
-                                text = stringResource(R.string.offline_favorites_warning),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onErrorContainer
-                            )
-                        }
-                    }
-                }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(WeatherTheme.colors.backgroundGradient)
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Spacer(modifier = Modifier.statusBarsPadding())
+            
+            Text(
+                text = stringResource(R.string.favorites),
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+            )
 
-                when (val state = uiState) {
-                    is FavoriteUiState.Loading -> {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator(color = SolidMagenta)
-                        }
+            AnimatedVisibility(visible = !isOnline) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 8.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.CloudOff, contentDescription = null, tint = MaterialTheme.colorScheme.onErrorContainer)
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(R.string.offline_favorites_warning),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
                     }
-                    is FavoriteUiState.Success -> {
-                        if (state.favorites.isEmpty()) {
-                            EmptyFavorites()
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = PaddingValues(16.dp),
-                                verticalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                items(state.favorites, key = { it.id }) { location ->
-                                    FavoriteItem(
-                                        location = location,
-                                        onClick = { viewModel.onFavoriteClicked(location) },
-                                        onDeleteClick = { viewModel.onDeleteRequest(location) }
-                                    )
-                                }
+                }
+            }
+
+            when (val state = uiState) {
+                is FavoriteUiState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = SolidMagenta)
+                    }
+                }
+                is FavoriteUiState.Success -> {
+                    if (state.favorites.isEmpty()) {
+                        EmptyFavorites()
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 80.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(state.favorites, key = { it.id }) { location ->
+                                FavoriteItem(
+                                    location = location,
+                                    onClick = { viewModel.onFavoriteClicked(location) },
+                                    onDeleteClick = { viewModel.onDeleteRequest(location) }
+                                )
                             }
                         }
                     }
-                    is FavoriteUiState.Error -> {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text(
-                                text = state.message.asString(),
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        }
+                }
+                is FavoriteUiState.Error -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = state.message.asString(),
+                            color = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             }
+        }
+
+        FloatingActionButton(
+            onClick = { viewModel.onAddFavoriteClicked() },
+            containerColor = if (isOnline) SolidMagenta else MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = Color.White,
+            shape = CircleShape,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 16.dp, end = 16.dp)
+        ) {
+            Icon(Icons.Default.AddLocation, contentDescription = stringResource(R.string.add_favorite))
         }
     }
 }

@@ -29,12 +29,8 @@ object WeatherUtils {
     }
 
     fun convertWindSpeed(speed: Double, toUnit: String, fromSystem: String): Double {
-        // OpenWeatherMap 'wind.speed' units:
-        // metric: meter/sec
-        // imperial: miles/hour
-        // standard: meter/sec
+
         
-        // Convert input speed to m/s first
         val speedInMs = if (fromSystem == "imperial") speed / 2.23694 else speed
         
         return when (toUnit) {
@@ -42,50 +38,35 @@ object WeatherUtils {
             "mph" -> speedInMs * 2.23694
             else -> speedInMs
         }
-    }
-
-    fun getWeatherIcon(iconCode: String, isBig: Boolean): Int {
+    }fun getWeatherIcon(iconCode: String, isBig: Boolean): Int {
         val isNight = iconCode.endsWith("n")
-        return when {
-            iconCode.startsWith("01") -> { // Clear sky
-                if (isNight) {
-                    if (isBig) R.drawable.big_moon_cloud_fast_wind else R.drawable.small_moon_cloud_fast_wind
-                } else {
-                    if (isBig) R.drawable.big_sun_cloud_mid_rain else R.drawable.small_sun_cloud_mid_rain
-                }
+
+        return when (iconCode.substring(0, 2)) {
+            "01" -> {
+                if (isNight) (if (isBig) R.drawable.big_moon else R.drawable.small_moon)
+                else (if (isBig) R.drawable.big_sun else R.drawable.small_sun)
             }
-            iconCode.startsWith("02") || iconCode.startsWith("03") || iconCode.startsWith("04") -> { // Clouds
-                if (isNight) {
-                    if (isBig) R.drawable.big_moon_cloud_fast_wind else R.drawable.small_moon_cloud_fast_wind
-                } else {
-                    if (isBig) R.drawable.big_sun_cloud_mid_rain else R.drawable.small_sun_cloud_mid_rain
-                }
+            "02", "03" -> {
+                if (isNight) (if (isBig) R.drawable.big_moon_cloud_fast_wind else R.drawable.small_moon_cloud_fast_wind)
+                else (if (isBig) R.drawable.big_sun_cloud_mid_rain else R.drawable.small_sun_cloud_mid_rain)
             }
-            iconCode.startsWith("09") || iconCode.startsWith("10") -> { // Rain
-                if (isNight) {
-                    if (isBig) R.drawable.big_moon_cloud_mid_rain else R.drawable.small_moon_cloud_mid_rain
-                } else {
-                    if (isBig) R.drawable.big_sun_cloud_angled_rain else R.drawable.small_sun_cloud_angled_rain
-                }
+            "04" -> {
+                if (isBig) R.drawable.big_cloud else R.drawable.small_cloud
             }
-            iconCode.startsWith("11") -> { // Thunderstorm
+            "09", "10" -> {
+                if (isBig) R.drawable.big_sun_cloud_angled_rain else R.drawable.small_sun_cloud_angled_rain
+            }
+            "11" -> {
                 if (isBig) R.drawable.big_tornado else R.drawable.small_tornado
             }
-            iconCode.startsWith("13") -> { // Snow
-                if (isNight) {
-                    if (isBig) R.drawable.big_moon_cloud_fast_wind else R.drawable.small_moon_cloud_fast_wind
-                } else {
-                    if (isBig) R.drawable.big_sun_cloud_mid_rain else R.drawable.small_sun_cloud_mid_rain
-                }
+            "13" -> {
+                if (isBig) R.drawable.big_snow else R.drawable.small_snow
             }
-            iconCode.startsWith("50") -> { // Mist/Fog
-                if (isNight) {
-                    if (isBig) R.drawable.big_moon_cloud_fast_wind else R.drawable.small_moon_cloud_fast_wind
-                } else {
-                    if (isBig) R.drawable.big_tornado else R.drawable.small_tornado
-                }
+            "50" -> {
+                if (isBig) R.drawable.big_fog else R.drawable.small_fog
             }
             else -> if (isBig) R.drawable.big_sun_cloud_mid_rain else R.drawable.small_sun_cloud_mid_rain
         }
     }
+
 }

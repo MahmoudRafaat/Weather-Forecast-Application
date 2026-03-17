@@ -33,5 +33,5 @@ val backgroundGradient = Brush.verticalGradient(
 )
 
 val selectedGlowGradient = Brush.verticalGradient(
-    colors = listOf(SolidMagenta, SolidLavender)
+    colors = listOf(SolidMagenta,Color(0xFFC427FB))
 )

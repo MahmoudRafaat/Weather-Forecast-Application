@@ -37,7 +37,6 @@ import com.example.weather_forecast_app.presentation.alerts.viewmodel.AlertViewM
 import com.example.weather_forecast_app.presentation.theme.*
 import com.example.weather_forecast_app.utils.UiText
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlertsScreen(
     navController: NavController
@@ -103,41 +102,22 @@ fun AlertsScreen(
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.alerts), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(WeatherTheme.colors.backgroundGradient)
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Spacer(modifier = Modifier.statusBarsPadding())
+            
+            Text(
+                text = stringResource(R.string.alerts),
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-                            showAddDialog = true
-                        } else {
-                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                        }
-                    } else {
-                        showAddDialog = true
-                    }
-                },
-                containerColor = SolidMagenta,
-                contentColor = Color.White,
-                shape = CircleShape
-            ) {
-                Icon(Icons.Default.AddAlert, contentDescription = stringResource(R.string.add_alert))
-            }
-        },
-        containerColor = Color.Transparent
-    ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(WeatherTheme.colors.backgroundGradient)
-                .padding(padding)
-        ) {
+
             when (val state = uiState) {
                 is AlertUiState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -152,7 +132,7 @@ fun AlertsScreen(
                     } else {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(16.dp),
+                            contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 80.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             items(state.alerts, key = { it.id }) { alert ->
@@ -171,6 +151,28 @@ fun AlertsScreen(
                     }
                 }
             }
+        }
+
+        FloatingActionButton(
+            onClick = {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                        showAddDialog = true
+                    } else {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                } else {
+                    showAddDialog = true
+                }
+            },
+            containerColor = SolidMagenta,
+            contentColor = Color.White,
+            shape = CircleShape,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 16.dp, end = 16.dp)
+        ) {
+            Icon(Icons.Default.AddAlert, contentDescription = stringResource(R.string.add_alert))
         }
     }
 

@@ -131,8 +131,10 @@ class HomeViewModel(
                     } else {
                         params.manualLoc
                     }
-                    val cityName = if (params.mode == "gps") null else params.manualCity
-                    coords?.let { refreshWeather(it.first, it.second, params.units, params.lang, cityName) }
+                    
+                    // التعديل: نرسل null لاسم المدينة لكي يقوم الـ API بإرجاعه باللغة الحالية
+                    // حتى لو كان الوضع يدوي (Manual Mode)
+                    coords?.let { refreshWeather(it.first, it.second, params.units, params.lang, null) }
                 }
             }
         }.launchIn(viewModelScope)
@@ -163,16 +165,15 @@ class HomeViewModel(
                 val units = repository.getUnits().first()
                 val lang = repository.getLanguage().first()
                 
-                var cityName: String? = null
                 val coords = if (mode == "gps") {
                     locationProvider.getCurrentLocation()
                 } else {
-                    cityName = repository.getManualCityName().first()
                     repository.getManualLocation().first()
                 }
                 
                 if (coords != null) {
-                    refreshWeather(coords.first, coords.second, units, lang, cityName)
+                    // التعديل: نرسل null لاسم المدينة لكي يتم تحديث اللغة
+                    refreshWeather(coords.first, coords.second, units, lang, null)
                     updateSyncTime()
                 }
             } catch (e: Exception) {

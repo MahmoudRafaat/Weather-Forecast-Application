@@ -100,143 +100,142 @@ fun SettingsScreen(
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.settings), color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
-            )
-        },
-        containerColor = Color.Transparent
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(WeatherTheme.colors.backgroundGradient)
-                .padding(paddingValues)
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            AnimatedVisibility(visible = !isOnline) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-                    shape = RoundedCornerShape(12.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(WeatherTheme.colors.backgroundGradient)
+            .padding(horizontal = 24.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(modifier = Modifier.statusBarsPadding())
+        
+        Text(
+            text = stringResource(R.string.settings),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+
+        AnimatedVisibility(visible = !isOnline) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(Icons.Default.CloudOff, contentDescription = null, tint = MaterialTheme.colorScheme.onErrorContainer)
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            text = stringResource(R.string.offline_settings_warning),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onErrorContainer
-                        )
-                    }
+                    Icon(Icons.Default.CloudOff, contentDescription = null, tint = MaterialTheme.colorScheme.onErrorContainer)
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = stringResource(R.string.offline_settings_warning),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
                 }
             }
-
-            SettingsSectionTitle(stringResource(R.string.location).uppercase())
-            SettingsCard(enabled = isOnline) {
-                LocationRadioItem(
-                    title = stringResource(R.string.gps),
-                    icon = Icons.Default.LocationOn,
-                    selected = locationMode == "gps",
-                    onClick = {
-                        val hasPermissions = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                        if (hasPermissions) {
-                            viewModel.updateLocationMode("gps")
-                        } else {
-                            permissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
-                        }
-                    },
-                    enabled = isOnline
-                )
-                
-                HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f), modifier = Modifier.padding(horizontal = 16.dp))
-                
-                LocationRadioItem(
-                    title = stringResource(R.string.map),
-                    icon = Icons.Default.Map,
-                    selected = locationMode == "map",
-                    onClick = { viewModel.onNavigateToMap() },
-                    enabled = isOnline
-                )
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            SettingsSectionTitle(stringResource(R.string.theme).uppercase())
-            SettingsCard(enabled = isOnline) {
-                MultiOptionSelector(
-                    options = listOf(
-                        stringResource(R.string.light) to "light",
-                        stringResource(R.string.dark) to "dark",
-                        stringResource(R.string.system_default) to "system"
-                    ),
-                    selectedOption = themeMode,
-                    onOptionSelected = { viewModel.updateThemeMode(it) },
-                    enabled = isOnline
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            SettingsSectionTitle(stringResource(R.string.units).uppercase())
-            SettingsCard(enabled = isOnline) {
-                MultiOptionSelector(
-                    options = listOf(
-                        stringResource(R.string.metric) + " (°C)" to "metric",
-                        stringResource(R.string.imperial) + " (°F)" to "imperial",
-                        stringResource(R.string.standard) + " (K)" to "standard"
-                    ),
-                    selectedOption = units,
-                    onOptionSelected = { viewModel.updateUnits(it) },
-                    enabled = isOnline
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            SettingsSectionTitle(stringResource(R.string.wind_speed_unit).uppercase())
-            SettingsCard(enabled = isOnline) {
-                MultiOptionSelector(
-                    options = listOf(
-                        stringResource(R.string.meter_sec) to "m/s",
-                        stringResource(R.string.miles_hour) to "mph"
-                    ),
-                    selectedOption = windSpeedUnit,
-                    onOptionSelected = { viewModel.updateWindSpeedUnit(it) },
-                    enabled = isOnline
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            SettingsSectionTitle(stringResource(R.string.language).uppercase())
-            SettingsCard(enabled = isOnline) {
-                LanguageSelectionItem(
-                    title = stringResource(R.string.english),
-                    icon = Icons.Default.Language,
-                    selected = language == "en",
-                    onClick = { viewModel.updateLanguage("en") },
-                    enabled = isOnline
-                )
-                HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f), modifier = Modifier.padding(horizontal = 16.dp))
-                LanguageSelectionItem(
-                    title = stringResource(R.string.arabic),
-                    icon = Icons.Default.Translate,
-                    selected = language == "ar",
-                    onClick = { viewModel.updateLanguage("ar") },
-                    enabled = isOnline
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(32.dp))
         }
+
+        SettingsSectionTitle(stringResource(R.string.location).uppercase())
+        SettingsCard(enabled = isOnline) {
+            LocationRadioItem(
+                title = stringResource(R.string.gps),
+                icon = Icons.Default.LocationOn,
+                selected = locationMode == "gps",
+                onClick = {
+                    val hasPermissions = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    if (hasPermissions) {
+                        viewModel.updateLocationMode("gps")
+                    } else {
+                        permissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+                    }
+                },
+                enabled = isOnline
+            )
+            
+            HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f), modifier = Modifier.padding(horizontal = 16.dp))
+            
+            LocationRadioItem(
+                title = stringResource(R.string.map),
+                icon = Icons.Default.Map,
+                selected = locationMode == "map",
+                onClick = { viewModel.onNavigateToMap() },
+                enabled = isOnline
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        SettingsSectionTitle(stringResource(R.string.theme).uppercase())
+        SettingsCard(enabled = isOnline) {
+            MultiOptionSelector(
+                options = listOf(
+                    stringResource(R.string.light) to "light",
+                    stringResource(R.string.dark) to "dark",
+                    stringResource(R.string.system_default) to "system"
+                ),
+                selectedOption = themeMode,
+                onOptionSelected = { viewModel.updateThemeMode(it) },
+                enabled = isOnline
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        SettingsSectionTitle(stringResource(R.string.units).uppercase())
+        SettingsCard(enabled = isOnline) {
+            MultiOptionSelector(
+                options = listOf(
+                    stringResource(R.string.metric) + " (°C)" to "metric",
+                    stringResource(R.string.imperial) + " (°F)" to "imperial",
+                    stringResource(R.string.standard) + " (K)" to "standard"
+                ),
+                selectedOption = units,
+                onOptionSelected = { viewModel.updateUnits(it) },
+                enabled = isOnline
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        SettingsSectionTitle(stringResource(R.string.wind_speed_unit).uppercase())
+        SettingsCard(enabled = isOnline) {
+            MultiOptionSelector(
+                options = listOf(
+                    stringResource(R.string.meter_sec) to "m/s",
+                    stringResource(R.string.miles_hour) to "mph"
+                ),
+                selectedOption = windSpeedUnit,
+                onOptionSelected = { viewModel.updateWindSpeedUnit(it) },
+                enabled = isOnline
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        SettingsSectionTitle(stringResource(R.string.language).uppercase())
+        SettingsCard(enabled = isOnline) {
+            LanguageSelectionItem(
+                title = stringResource(R.string.english),
+                icon = Icons.Default.Language,
+                selected = language == "en",
+                onClick = { viewModel.updateLanguage("en") },
+                enabled = isOnline
+            )
+            HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f), modifier = Modifier.padding(horizontal = 16.dp))
+            LanguageSelectionItem(
+                title = stringResource(R.string.arabic),
+                icon = Icons.Default.Translate,
+                selected = language == "ar",
+                onClick = { viewModel.updateLanguage("ar") },
+                enabled = isOnline
+            )
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp)) // تقليل المسافة في النهاية
     }
 }
