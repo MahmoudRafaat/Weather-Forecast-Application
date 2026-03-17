@@ -9,7 +9,7 @@ Built with a focus on **Reactive Programming** and **Clean Architecture principl
 ## 📥 Download App
 You can download the latest version of the Rasd APK from the link below:
 
-[**Download Rasd APK**](https://github.com/MahmoudRafaat/Weather-Forecast-Application/releases)
+[**Download Rasd APK**](https://drive.google.com/drive/folders/1jWjnp1n4RQQ_VMnPAAqQNMXy5oJA4Q5Y?usp=sharing)
 
 ---
 
@@ -132,7 +132,7 @@ com.example.rasd
 ---
 
 ## 🧪 Testing
-
+USED junit4 for tesing
 ```bash
 # Unit Tests
 ./gradlew test
@@ -141,11 +141,7 @@ com.example.rasd
 ./gradlew connectedAndroidTest
 ```
 
----
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
