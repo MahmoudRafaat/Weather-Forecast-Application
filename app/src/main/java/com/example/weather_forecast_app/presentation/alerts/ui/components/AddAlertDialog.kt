@@ -41,7 +41,7 @@ fun AddAlertDialog(
         containerColor = MaterialTheme.colorScheme.surface,
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                // Start Time Picker
+
                 OutlinedCard(
                     onClick = {
                         showTimePicker(context) { calendar ->
@@ -61,7 +61,7 @@ fun AddAlertDialog(
                     }
                 }
 
-                // End Time Picker
+
                 OutlinedCard(
                     onClick = {
                         showTimePicker(context) { calendar ->
@@ -81,7 +81,7 @@ fun AddAlertDialog(
                     }
                 }
 
-                // Type Toggle
+
                 Column {
                     Text(stringResource(R.string.notification_type), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
                     Row(verticalAlignment = Alignment.CenterVertically) {

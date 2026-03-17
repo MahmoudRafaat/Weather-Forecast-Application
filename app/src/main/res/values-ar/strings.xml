@@ -82,9 +82,9 @@
     <string name="last_update_format">كان آخر تحديث في %1$s</string>
     <string name="dismiss">إغلاق</string>
 
-    <string name="weather_warning_snow">هناك ثلوج بالخارج. ننصح بعدم الخروج اليوم!</string>
-    <string name="weather_warning_rain">هناك أمطار بالخارج. ننصح بعدم الخروج اليوم!</string>
-    <string name="weather_warning_clouds">هناك الكثير من الغيوم بالخارج. ننصح بعدم الخروج اليوم!</string>
+    <string name="weather_warning_snow">هناك ثلوج بالخارج. ننصح بتتبع الطقس!</string>
+    <string name="weather_warning_rain">هناك أمطار بالخارج.  ننصح بتتبع الطقس!</string>
+    <string name="weather_warning_clouds">هناك الكثير من الغيوم بالخارج.  ننصح بتتبع الطقس!</string>
     <string name="weather_good_advice">الطقس جيد، لا تتردد في الخروج!</string>
 
     <!-- Permission Denial -->

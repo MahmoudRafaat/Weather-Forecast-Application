@@ -8,6 +8,6 @@ data class WeatherAlert(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val startTime: Long,
     val endTime: Long,
-    val type: String, // "alarm" or "notification"
+    val type: String,
     val isEnabled: Boolean = true
 )

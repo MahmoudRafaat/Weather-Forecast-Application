@@ -31,7 +31,7 @@ fun OsmMapView(
     val mapView = remember { MapView(context) }
     val loadingText = stringResource(R.string.loading)
 
-    // Lifecycle Management
+
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {

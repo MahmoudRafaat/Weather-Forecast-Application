@@ -49,7 +49,6 @@ class AlarmService : Service() {
     }
 
     private fun createNotification(context: Context, alertId: Int, message: String): android.app.Notification {
-        // Unique channel ID to ensure silence settings are applied freshly
         val channelId = "weather_alarm_channel_v6_silent"
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

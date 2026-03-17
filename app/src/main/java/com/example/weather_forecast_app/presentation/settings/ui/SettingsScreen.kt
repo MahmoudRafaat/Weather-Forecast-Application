@@ -236,6 +236,6 @@ fun SettingsScreen(
             )
         }
         
-        Spacer(modifier = Modifier.height(16.dp)) // تقليل المسافة في النهاية
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }

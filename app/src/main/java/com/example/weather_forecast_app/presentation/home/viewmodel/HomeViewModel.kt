@@ -132,8 +132,7 @@ class HomeViewModel(
                         params.manualLoc
                     }
                     
-                    // التعديل: نرسل null لاسم المدينة لكي يقوم الـ API بإرجاعه باللغة الحالية
-                    // حتى لو كان الوضع يدوي (Manual Mode)
+
                     coords?.let { refreshWeather(it.first, it.second, params.units, params.lang, null) }
                 }
             }
@@ -172,7 +171,6 @@ class HomeViewModel(
                 }
                 
                 if (coords != null) {
-                    // التعديل: نرسل null لاسم المدينة لكي يتم تحديث اللغة
                     refreshWeather(coords.first, coords.second, units, lang, null)
                     updateSyncTime()
                 }

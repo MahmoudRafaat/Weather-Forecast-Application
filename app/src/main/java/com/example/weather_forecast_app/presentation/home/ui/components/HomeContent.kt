@@ -50,7 +50,7 @@ fun HomeContent(
         Spacer(modifier = Modifier.height(40.dp))
         ForecastSection(
             title = stringResource(R.string.today),
-            items = next24Hours, // استخدام الـ 24 ساعة فقط هنا
+            items = next24Hours,
             dateFormat = stringResource(R.string.time_format_am_pm),
             tempUnit = tempUnit
         )

@@ -63,8 +63,7 @@ class AlertWorker(
             val localWeather = repository.getCurrentWeatherLocal().first()
             weatherDescription = localWeather?.description ?: ""
             temp = localWeather?.temp?.toInt()?.toString() ?: "--"
-            // Since we don't store main weather in lean entity anymore, we use description or a mapping
-            mainWeather = localWeather?.description ?: "" 
+            mainWeather = localWeather?.description ?: ""
             
             val sdf = SimpleDateFormat("HH:mm", Locale(lang))
             lastUpdateMsg = "\n" + localizedContext.getString(R.string.last_update_format, sdf.format(Date()))

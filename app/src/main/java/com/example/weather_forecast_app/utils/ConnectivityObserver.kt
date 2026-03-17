@@ -54,7 +54,6 @@ class NetworkConnectivityObserver(
                 .build()
             connectivityManager.registerNetworkCallback(request, callback)
 
-            // Initial check
             val initialStatus = if (isNetworkAvailable()) {
                 ConnectivityObserver.Status.Available
             } else {
